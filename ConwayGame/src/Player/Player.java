@@ -29,11 +29,11 @@ public class Player implements IPlayer{
         int[] crd = TerminalUI.chooseActivateCell(this.grid.getRowSize(),this.grid.getColumnSize());
         int r = crd[0];
         int c = crd[1];
-        while(grid.isAlive(0,0)){
+        while(grid.isAlive(r,c)){
             System.out.println("Invalid input! HINT: this cell is already alive. ");
             TerminalUI.chooseActivateCell(this.grid.getRowSize(),this.grid.getColumnSize());
         }
-        this.grid.activateCell(this.camp,0,0);
+        this.grid.activateCell(this.camp,r,c);
     }
 
     public boolean isExtinct() {

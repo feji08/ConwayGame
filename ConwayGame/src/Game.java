@@ -28,19 +28,34 @@ public class Game {
             this.players[1] = player1;
         }
     }
+
+    public void boardConfiguration(){
+        String camp1 = this.players[0].getCamp();
+        this.grid.activateCell(camp1,1,1);
+        this.grid.activateCell(camp1,1,2);
+        this.grid.activateCell(camp1,2,1);
+        this.grid.activateCell(camp1,2,2);
+        String camp2 = this.players[1].getCamp();
+        this.grid.activateCell(camp2,7,7);
+        this.grid.activateCell(camp2,7,8);
+        this.grid.activateCell(camp2,8,7);
+        this.grid.activateCell(camp2,8,8);
+    }
     public void gameOn(){
-        while(nextTurn = true) {
+        while(this.nextTurn) {
             Player currentPlayer = this.players[this.generation%2];
             TerminalUI.printBoard(this.grid);
+            System.out.print(currentPlayer.getName()+"("+currentPlayer.getCamp()+"), ");
             currentPlayer.killCell();
             TerminalUI.printBoard(this.grid);
+            System.out.print(currentPlayer.getName()+"("+currentPlayer.getCamp()+"), ");
             currentPlayer.activateCell();
             TerminalUI.printBoard(this.grid);
             this.grid.generate();
             this.generation++;
-            TerminalUI.printBoard(this.grid);
             for (Player player : this.players) {
-                if (grid.isExtinct(player.getCamp())) {
+                if (this.nextTurn && grid.isExtinct(player.getCamp())) {
+                    TerminalUI.printBoard(this.grid);
                     System.out.println("Game over: " + player.getName() + " loses!");
                     this.nextTurn = false;
                 }

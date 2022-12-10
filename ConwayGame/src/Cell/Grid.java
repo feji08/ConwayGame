@@ -1,6 +1,5 @@
 package Cell;
 import Cell.Cell;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -23,14 +22,15 @@ public class Grid implements IGrid{
         }
         ////edge cells
         //column
+        //(1,0),(1,max),(2,0),(2,max),(3,0),(3,max)...
         for(int i = 1; i < rowSize-1; i ++){
-            this.cells[i][0] = new NormalCell(i,0);
-            this.cells[i][columnSize-1] = new NormalCell(i,columnSize-1);
+            this.cells[i][0] = new EdgeCell(i,0);
+            this.cells[i][columnSize-1] = new EdgeCell(i,columnSize-1);
         }
         //row
         for(int j = 1; j < columnSize-1; j++){
-            this.cells[0][j] = new NormalCell(0,j);
-            this.cells[rowSize-1][j] = new NormalCell(rowSize-1,j);
+            this.cells[0][j] = new EdgeCell(0,j);
+            this.cells[rowSize-1][j] = new EdgeCell(rowSize-1,j);
         }
         //corner cells
         this.cells[0][0] = new CornerCell(0,0);
@@ -40,14 +40,13 @@ public class Grid implements IGrid{
         //assign neighbors to cells
         for(int i = 0; i < rowSize; i ++){
             for(int j = 0; j < columnSize; j++){
-                Iterator neighborsCrd = this.cells[i][j].findNeighbors();
+                ArrayList<int[]> neighborsCrd = this.cells[i][j].findNeighbors(this.rowSize,this.columnSize);
                 ArrayList<Cell> neighbors = new ArrayList<>();
-                while(neighborsCrd.hasNext()){
-                    int[] crd = (int[]) neighborsCrd.next();
+                for(int k = 0; k < neighborsCrd.size(); k++){
+                    int[] crd = neighborsCrd.get(k);
                     neighbors.add(this.cells[crd[0]][crd[1]]);
                 }
-                Iterator iNeighbors = neighbors.iterator();
-                this.cells[i][j].assignNeighbors(iNeighbors);
+                this.cells[i][j].assignNeighbors(neighbors);
             }
         }
     }
@@ -80,7 +79,7 @@ public class Grid implements IGrid{
     public boolean isExtinct(String camp){
         for(Cell[] cells: this.cells) {
             for (Cell cell : cells) {
-                if(cell.isAlive()){
+                if(cell.getCamp() == camp && cell.isAlive()){
                     return false;
                 }
             }
