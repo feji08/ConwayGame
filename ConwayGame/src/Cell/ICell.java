@@ -1,10 +1,11 @@
 package Cell;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 
 public interface ICell {
-    Iterator findNeighbors();//return neighbor's coordinates
-    void assignNeighbors(Iterator neighbors);//assign neighborCells
+    ArrayList findNeighbors(int rowSize, int columnSize);//return neighbor's coordinates
+    void assignNeighbors(ArrayList neighbors);//assign neighborCells
     void bornInCamp(String playerName);//the player activate the cell
     void takeMurder();//the player kill the cell
     /**

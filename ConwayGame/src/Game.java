@@ -16,9 +16,10 @@ public class Game {
 
     public void initialize(){
         Player player1 = new Player(this.grid,TerminalUI.inputName("player1"),"#");
-        player1.setCamp(TerminalUI.chooseSymbol(player1.getName()));
+        player1.setCamp(TerminalUI.chooseSymbol("", player1));
+        String chosenCamp = player1.getCamp();
         Player player2 = new Player(this.grid,TerminalUI.inputName("player2"),"#");
-        player2.setCamp(TerminalUI.chooseSymbol(player2.getName()));
+        player2.setCamp(TerminalUI.chooseSymbol(chosenCamp, player2));
         //order by initial character
         if(player1.getName().compareToIgnoreCase(player2.getName()) < 0 ){
             this.players[0] = player1;
@@ -28,20 +29,29 @@ public class Game {
             this.players[1] = player1;
         }
     }
+
+    public void boardConfiguration(){
+        String camp1 = this.players[0].getCamp();
+        String camp2 = this.players[1].getCamp();
+        OpeningBoard.gambit(this.grid,camp1,camp2,1);
+    }
     public void gameOn(){
-        while(nextTurn = true) {
+        while(this.nextTurn) {
             Player currentPlayer = this.players[this.generation%2];
             TerminalUI.printBoard(this.grid);
+            System.out.print(currentPlayer.getName()+"("+currentPlayer.getCamp()+"), ");
             currentPlayer.killCell();
             TerminalUI.printBoard(this.grid);
+            System.out.print(currentPlayer.getName()+"("+currentPlayer.getCamp()+"), ");
             currentPlayer.activateCell();
             TerminalUI.printBoard(this.grid);
             this.grid.generate();
             this.generation++;
-            TerminalUI.printBoard(this.grid);
             for (Player player : this.players) {
-                if (grid.isExtinct(player.getCamp())) {
+                if (this.nextTurn && grid.isExtinct(player.getCamp())) {
+                    TerminalUI.printBoard(this.grid);
                     System.out.println("Game over: " + player.getName() + " loses!");
+
                     this.nextTurn = false;
                 }
             }

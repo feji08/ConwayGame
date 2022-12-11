@@ -1,8 +1,7 @@
 package Cell;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 public abstract class Cell implements ICell {
 
@@ -11,31 +10,34 @@ public abstract class Cell implements ICell {
 
     //private symbol/color/
     //owner/group/camp
-    private int rowIndex;
-    private int columnIndex;
+    private final int rowIndex;
+    private final int columnIndex;
     private boolean alive;
-    private boolean predictAlive;
+    private boolean predictAlter;
     private boolean predictFlag;//indicating if a prediction is done after last generation
     private String camp;
-    Cell[] neighbors;
 
-    public Cell(int rowIndex, int columnIndex){
+    private String predictCamp;
+    private Cell[] neighbors;
+    private final int neighborSize;
+
+    public Cell(int rowIndex, int columnIndex,int neighborSize){
         this.rowIndex = rowIndex;
         this.columnIndex = columnIndex;
         this.alive = false;
-        this.predictAlive = true;
+        this.predictAlter = false;
         this.camp = " ";
+        this.neighborSize = neighborSize;
+        this.neighbors = new Cell[neighborSize];
+        this.predictCamp = this.camp;
     }
-    public Iterator findNeighbors(){
+    public ArrayList findNeighbors(int rowSize, int columnSize){
         //should be overridden
-        this.neighbors = new Cell[8];
         return null;
     }
-    public void assignNeighbors(Iterator iNeighbors){
-        int i = 0;
-        while(iNeighbors.hasNext()){
-            this.neighbors[i] = (Cell) iNeighbors.next();
-            i++;
+    public void assignNeighbors(ArrayList neighbors){
+        for(int i = 0; i < this.neighborSize; i++){
+            this.neighbors[i] = (Cell) neighbors.get(i);
         }
     }
 
@@ -56,22 +58,29 @@ public abstract class Cell implements ICell {
     public void predict(){
         //predict the state of next generation
         //BUT WITHOUT updating the REAL state, because it will influence other cells
-        assert this.predictFlag == false;
-        if(!this.alive && numAliveNeighbors() == 3){
-            this.predictAlive = true;
-        }else if(numAliveNeighbors() < 2 | numAliveNeighbors() > 3){
-            this.predictAlive = false;
-        }
+        assert !this.predictFlag;
+        this.predictAlter = false;//default stay
+        this.predictCamp = this.camp;
+        int num = numAliveNeighbors();
+        if(!this.alive && num == 3) {
+                this.predictAlter = true;
+                this.predictCamp = dominantNeighborCamp();
+            }//reborn
+        else if(this.alive && (num<2 | num>3)){
+                this.predictAlter = true;
+                this.predictCamp = " ";
+            }//die
         this.predictFlag = true;
     }
 
     public void generate(){
         //update the prediction to REAL state
         //should only be updated after all cells predicted
-        assert this.predictFlag == true;
-        if(this.alive != this.predictAlive) {
+        assert this.predictFlag;
+        if(this.predictAlter) {
             if (this.alive) {die();} else {born();}//alter state
         }
+        this.camp = this.predictCamp;
         this.predictFlag = false;
     }
 
@@ -91,30 +100,23 @@ public abstract class Cell implements ICell {
     private void born(){
         //check colors around
         this.alive = true;
-        this.camp = dominantNeighborCamp();
     }
 
     private void die(){
         this.alive = false;
-        this.camp = " ";
     }
     private String dominantNeighborCamp(){
         assert numAliveNeighbors() == 3;
-        //record the frequency
-        HashMap<String,Integer> neighborCamp = new HashMap<>();
-        for(Cell cell:this.neighbors){
-            String camp = cell.getCamp();
-            if(!neighborCamp.containsKey(camp)){
-                neighborCamp.put(camp,1);
-            }else{neighborCamp.put(camp,neighborCamp.get(camp)+1);}
-        }
-        //compare
-        for(Object k: neighborCamp.keySet()){
-            if(neighborCamp.get(k) == 2 | neighborCamp.get(k) == 3){
-                return (String) k;//must return a value here
+        //record the camps
+        ArrayList<Cell> aliveNeighbors = aliveNeighbors();
+        String[] camp = new String[3];
+        for(int i = 0; i < 3; i++){
+            camp[i] = aliveNeighbors.get(i).getCamp();
             }
-        }
-        return null;
+        //compare
+        if(camp[0]==camp[1]){
+            return camp[0];
+        }else{return camp[3];}
     }
     public int numAliveNeighbors(){
         //return the number of alive neighbors
@@ -128,8 +130,13 @@ public abstract class Cell implements ICell {
         return num;
     }
 
-    @Override
-    public String toString() {
-        return this.camp;
+    private ArrayList<Cell> aliveNeighbors(){
+        ArrayList<Cell> aliveNeighbors = new ArrayList<>();
+        for(Cell cell:this.neighbors){
+            if(cell.isAlive()) {
+                aliveNeighbors.add(cell);
+            }
+        }
+        return aliveNeighbors;
     }
 }

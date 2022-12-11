@@ -18,10 +18,16 @@ public class Player implements IPlayer{
         int r = crd[0];
         int c = crd[1];
         //alive validation
-        while(!grid.isAlive(r,c)){
+        if(!grid.isAlive(r,c)){
             System.out.println("Invalid input! HINT: this cell is not alive. ");
             TerminalUI.chooseKillCell(this.grid.getRowSize(),this.grid.getColumnSize());
+        }else{
+            while(grid.getCamp(r,c) == this.camp){//alive
+                System.out.println("Invalid input! HINT: this cell is yours. ");
+                TerminalUI.chooseKillCell(this.grid.getRowSize(),this.grid.getColumnSize());
+            }
         }
+
         this.grid.killCell(r,c);
     }
 
@@ -29,11 +35,11 @@ public class Player implements IPlayer{
         int[] crd = TerminalUI.chooseActivateCell(this.grid.getRowSize(),this.grid.getColumnSize());
         int r = crd[0];
         int c = crd[1];
-        while(grid.isAlive(0,0)){
+        while(grid.isAlive(r,c)){
             System.out.println("Invalid input! HINT: this cell is already alive. ");
             TerminalUI.chooseActivateCell(this.grid.getRowSize(),this.grid.getColumnSize());
         }
-        this.grid.activateCell(this.camp,0,0);
+        this.grid.activateCell(this.camp,r,c);
     }
 
     public boolean isExtinct() {
