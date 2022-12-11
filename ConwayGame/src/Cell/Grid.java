@@ -55,6 +55,10 @@ public class Grid implements IGrid{
         return cells[rowIndex][columnIndex].isAlive();
     }
 
+    public String getCamp(int rowIndex, int columnIndex) {
+        return cells[rowIndex][columnIndex].getCamp();
+    }
+
     public void activateCell(String camp, int rowIndex, int columnIndex){
         cells[rowIndex][columnIndex].bornInCamp(camp);
     }

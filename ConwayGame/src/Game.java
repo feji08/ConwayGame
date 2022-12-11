@@ -58,6 +58,7 @@ public class Game {
                 if (this.nextTurn && grid.isExtinct(player.getCamp())) {
                     TerminalUI.printBoard(this.grid);
                     System.out.println("Game over: " + player.getName() + " loses!");
+
                     this.nextTurn = false;
                 }
             }

@@ -22,6 +22,10 @@ public class Player implements IPlayer{
             System.out.println("Invalid input! HINT: this cell is not alive. ");
             TerminalUI.chooseKillCell(this.grid.getRowSize(),this.grid.getColumnSize());
         }
+        while(grid.getCamp(r,c) == this.camp){
+            System.out.println("Invalid input! HINT: this cell is yours. ");
+            TerminalUI.chooseKillCell(this.grid.getRowSize(),this.grid.getColumnSize());
+        }
         this.grid.killCell(r,c);
     }
 
