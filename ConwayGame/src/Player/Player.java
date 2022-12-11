@@ -18,14 +18,16 @@ public class Player implements IPlayer{
         int r = crd[0];
         int c = crd[1];
         //alive validation
-        while(!grid.isAlive(r,c)){
+        if(!grid.isAlive(r,c)){
             System.out.println("Invalid input! HINT: this cell is not alive. ");
             TerminalUI.chooseKillCell(this.grid.getRowSize(),this.grid.getColumnSize());
+        }else{
+            while(grid.getCamp(r,c) == this.camp){//alive
+                System.out.println("Invalid input! HINT: this cell is yours. ");
+                TerminalUI.chooseKillCell(this.grid.getRowSize(),this.grid.getColumnSize());
+            }
         }
-        while(grid.getCamp(r,c) == this.camp){
-            System.out.println("Invalid input! HINT: this cell is yours. ");
-            TerminalUI.chooseKillCell(this.grid.getRowSize(),this.grid.getColumnSize());
-        }
+
         this.grid.killCell(r,c);
     }
 
