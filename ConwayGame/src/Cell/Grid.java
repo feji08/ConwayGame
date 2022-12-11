@@ -1,13 +1,10 @@
 package Cell;
-import Cell.Cell;
 import java.util.ArrayList;
-import java.util.Iterator;
-
 public class Grid implements IGrid{
     //also need cells of different players
-    private Cell[][] cells;
-    private int rowSize;
-    private int columnSize;
+    private final Cell[][] cells;
+    private final int rowSize;
+    private final int columnSize;
 
     public Grid(int[] size){
         rowSize = size[0];
@@ -42,8 +39,7 @@ public class Grid implements IGrid{
             for(int j = 0; j < columnSize; j++){
                 ArrayList<int[]> neighborsCrd = this.cells[i][j].findNeighbors(this.rowSize,this.columnSize);
                 ArrayList<Cell> neighbors = new ArrayList<>();
-                for(int k = 0; k < neighborsCrd.size(); k++){
-                    int[] crd = neighborsCrd.get(k);
+                for (int[] crd : neighborsCrd) {
                     neighbors.add(this.cells[crd[0]][crd[1]]);
                 }
                 this.cells[i][j].assignNeighbors(neighbors);
@@ -83,7 +79,7 @@ public class Grid implements IGrid{
     public boolean isExtinct(String camp){
         for(Cell[] cells: this.cells) {
             for (Cell cell : cells) {
-                if(cell.getCamp() == camp && cell.isAlive()){
+                if(cell.getCamp().equals(camp) && cell.isAlive()){
                     return false;
                 }
             }

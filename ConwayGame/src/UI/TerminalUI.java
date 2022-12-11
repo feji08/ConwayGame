@@ -4,7 +4,6 @@ import Cell.Cell;
 import Cell.Grid;
 import Player.Player;
 
-import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
@@ -51,26 +50,20 @@ public class TerminalUI{
         if(!Pattern.matches(pattern,input)){ //invalid
             System.out.println("Invalid input! ");
             return TerminalUI.chooseSymbol(chosenCamp, player);
-        }else { //valid
+        }else { //valid: A B C D E F G
             if(Symbol.valueOf(input).getValue().equals(chosenCamp)){ //already chosen
                 System.out.println("Invalid input! HINT: this symbol has been chosen!");
                 return TerminalUI.chooseSymbol(chosenCamp, player);
             }else {
-                if (input.equals("A")) {
-                    return String.valueOf(Symbol.A.getValue());
-                } else if (input.equals("B")) {
-                    return String.valueOf(Symbol.B.getValue());
-                } else if (input.equals("C")) {
-                    return String.valueOf(Symbol.C.getValue());
-                } else if (input.equals("D")) {
-                    return String.valueOf(Symbol.D.getValue());
-                } else if (input.equals("E")) {
-                    return String.valueOf(Symbol.E.getValue());
-                } else if (input.equals("F")) {
-                    return String.valueOf(Symbol.F.getValue());
-                } else {
-                    return String.valueOf(Symbol.G.getValue());
-                }
+                return switch (input) {
+                    case "A" -> String.valueOf(Symbol.A.getValue());
+                    case "B" -> String.valueOf(Symbol.B.getValue());
+                    case "C" -> String.valueOf(Symbol.C.getValue());
+                    case "D" -> String.valueOf(Symbol.D.getValue());
+                    case "E" -> String.valueOf(Symbol.E.getValue());
+                    case "F" -> String.valueOf(Symbol.F.getValue());
+                    default -> String.valueOf(Symbol.G.getValue());
+                };
             }
         }
     }
@@ -81,7 +74,7 @@ public class TerminalUI{
         Scanner scanner = new Scanner(System.in);
         String input = scanner.next();
         if(!Pattern.matches(pattern,input)){
-            System.out.println("Invalid input! HINT: raw index comma column index. ");
+            System.out.println("Invalid input! HINT: row index comma column index. ");
             return TerminalUI.chooseKillCell(rowSize, columnSize);
         }else{
             String[] sizeString = input.split(",",2);
@@ -105,7 +98,7 @@ public class TerminalUI{
         Scanner scanner = new Scanner(System.in);
         String input = scanner.next();
         if(!Pattern.matches(pattern,input)){
-            System.out.println("Invalid input! HINT: raw index comma column index. ");
+            System.out.println("Invalid input! HINT: row index comma column index. ");
             return TerminalUI.chooseActivateCell(rowSize, columnSize);
         }else{
             String[] sizeString = input.split(",",2);

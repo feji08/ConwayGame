@@ -3,8 +3,8 @@ import Cell.Grid;
 import UI.TerminalUI;
 
 public class Player implements IPlayer{
-    private Grid grid;
-    private String name;
+    private final Grid grid;
+    private final String name;
     private String camp;
 
     public Player(Grid grid,String name,String camp){
@@ -20,32 +20,29 @@ public class Player implements IPlayer{
         //alive validation
         if(!grid.isAlive(r,c)){
             System.out.println("Invalid input! HINT: this cell is not alive. ");
-            TerminalUI.chooseKillCell(this.grid.getRowSize(),this.grid.getColumnSize());
+            this.killCell();
         }else{
-            while(grid.getCamp(r,c) == this.camp){//alive
-                System.out.println("Invalid input! HINT: this cell is yours. ");
-                TerminalUI.chooseKillCell(this.grid.getRowSize(),this.grid.getColumnSize());
-            }
+            if(grid.getCamp(r,c).equals(this.camp)){//alive and belong to the player's self
+                System.out.println("Invalid input! HINT: this cell is yours"+"("+this.camp+").");
+                this.killCell();
+            }else{this.grid.killCell(r,c);}
         }
-
-        this.grid.killCell(r,c);
     }
 
     public void activateCell() {
         int[] crd = TerminalUI.chooseActivateCell(this.grid.getRowSize(),this.grid.getColumnSize());
         int r = crd[0];
         int c = crd[1];
-        while(grid.isAlive(r,c)){
+        if(grid.isAlive(r,c)){
             System.out.println("Invalid input! HINT: this cell is already alive. ");
-            TerminalUI.chooseActivateCell(this.grid.getRowSize(),this.grid.getColumnSize());
+            this.activateCell();
+        }else{
+            this.grid.activateCell(this.camp,r,c);
         }
-        this.grid.activateCell(this.camp,r,c);
     }
 
     public boolean isExtinct() {
-        if(this.grid.isExtinct(this.camp)){
-            return true;
-        }else{return false;}
+        return this.grid.isExtinct(this.camp);
     }
     public String getName() {
         return name;
