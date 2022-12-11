@@ -12,7 +12,7 @@ public class TerminalUI{
         Scanner scanner = new Scanner(System.in);
         String input = scanner.next();
         if(!Pattern.matches(pattern,input)){
-            System.out.println("Invalid input! HINT: raw size comma column size. ");
+            System.out.println("Invalid input! HINT: row size comma column size. ");
             return TerminalUI.inputGridSize();
         }else {
             String[] sizeString = input.split(",", 2);
@@ -117,7 +117,7 @@ public class TerminalUI{
             rowIdx ++;
         }
         TerminalUI.printMultipleTimes("-",width*2+1);
-        for(int i = 0; i < rowIdx; i++){
+        for(int i = 0; i < width; i++){
             System.out.print(" "+i);
         }
         System.out.print("\n");
