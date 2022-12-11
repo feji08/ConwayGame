@@ -1,7 +1,10 @@
 package UI;
-import Cell.Grid;
+
 import Cell.Cell;
-import java.util.Collections;
+import Cell.Grid;
+import Player.Player;
+
+import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
@@ -34,22 +37,39 @@ public class TerminalUI{
         Scanner scanner = new Scanner(System.in);
         return scanner.next();
     }
-    public static String chooseSymbol(String player) {
-        System.out.println(player+", please select your symbol: ");
-        System.out.print("A.\033[32m"+"#"+"\033[0m"+String.join("", Collections.nCopies(8, " ")));
-        System.out.println("B.\033[31m"+"#"+"\033[0m");
-        String pattern = "[AaBb]";
+    public static String chooseSymbol(String chosenCamp, Player player) {
+        System.out.println(player.getName()+", please select your symbol: ");
+        for(int i = 0; i < 7; i++){ //7 symbol patterns
+            char c = (char)(i+65);
+            System.out.print(c);//A
+            System.out.print("."+Symbol.valueOf(String.valueOf(c)).getValue());//.(Symbol.A.getValue())
+            TerminalUI.printMultipleTimes(" ",8);
+        }
+        String pattern = "[ABCDEFG]";//7 symbol patterns
         Scanner scanner = new Scanner(System.in);
-        String input = scanner.next();
-        if(!Pattern.matches(pattern,input)){
+        String input = scanner.next().toUpperCase();//A/a ---> A
+        if(!Pattern.matches(pattern,input)){ //invalid
             System.out.println("Invalid input! ");
-            return TerminalUI.chooseSymbol(player);
-        }else {
-            if (Pattern.matches("[Aa]", input)) {
-                return "\033[32m" + "#" + "\033[0m";
-            } else {
-                {
-                    return "\033[31m" + "#" + "\033[0m";
+            return TerminalUI.chooseSymbol(chosenCamp, player);
+        }else { //valid
+            if(Symbol.valueOf(input).getValue().equals(chosenCamp)){ //already chosen
+                System.out.println("Invalid input! HINT: this symbol has been chosen!");
+                return TerminalUI.chooseSymbol(chosenCamp, player);
+            }else {
+                if (input.equals("A")) {
+                    return String.valueOf(Symbol.A.getValue());
+                } else if (input.equals("B")) {
+                    return String.valueOf(Symbol.B.getValue());
+                } else if (input.equals("C")) {
+                    return String.valueOf(Symbol.C.getValue());
+                } else if (input.equals("D")) {
+                    return String.valueOf(Symbol.D.getValue());
+                } else if (input.equals("E")) {
+                    return String.valueOf(Symbol.E.getValue());
+                } else if (input.equals("F")) {
+                    return String.valueOf(Symbol.F.getValue());
+                } else {
+                    return String.valueOf(Symbol.G.getValue());
                 }
             }
         }

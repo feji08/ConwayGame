@@ -16,9 +16,10 @@ public class Game {
 
     public void initialize(){
         Player player1 = new Player(this.grid,TerminalUI.inputName("player1"),"#");
-        player1.setCamp(TerminalUI.chooseSymbol(player1.getName()));
+        player1.setCamp(TerminalUI.chooseSymbol("", player1));
+        String chosenCamp = player1.getCamp();
         Player player2 = new Player(this.grid,TerminalUI.inputName("player2"),"#");
-        player2.setCamp(TerminalUI.chooseSymbol(player2.getName()));
+        player2.setCamp(TerminalUI.chooseSymbol(chosenCamp, player2));
         //order by initial character
         if(player1.getName().compareToIgnoreCase(player2.getName()) < 0 ){
             this.players[0] = player1;
