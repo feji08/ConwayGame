@@ -32,15 +32,8 @@ public class Game {
 
     public void boardConfiguration(){
         String camp1 = this.players[0].getCamp();
-        this.grid.activateCell(camp1,1,1);
-        this.grid.activateCell(camp1,1,2);
-        this.grid.activateCell(camp1,2,1);
-        this.grid.activateCell(camp1,2,2);
         String camp2 = this.players[1].getCamp();
-        this.grid.activateCell(camp2,7,7);
-        this.grid.activateCell(camp2,7,8);
-        this.grid.activateCell(camp2,8,7);
-        this.grid.activateCell(camp2,8,8);
+        OpeningBoard.gambit(this.grid,camp1,camp2,1);
     }
     public void gameOn(){
         while(this.nextTurn) {
