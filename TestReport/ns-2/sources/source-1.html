@@ -1,0 +1,256 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > Cell</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">Cell</a>
+</div>
+
+<h1>Coverage Summary for Class: Cell (Cell)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Cell</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    94.1%
+  </span>
+  <span class="absValue">
+    (16/17)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    76%
+  </span>
+  <span class="absValue">
+    (38/50)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    96.6%
+  </span>
+  <span class="absValue">
+    (57/59)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package Cell;
+&nbsp;
+&nbsp;import java.util.ArrayList;
+&nbsp;
+<b class="fc">&nbsp;public abstract class Cell implements ICell {</b>
+&nbsp;
+&nbsp;    //child classes differ in
+&nbsp;    //this.neighbors: number of neighbors
+&nbsp;
+&nbsp;    //private symbol/color/
+&nbsp;    //owner/group/camp
+&nbsp;    private final int rowIndex;
+&nbsp;    private final int columnIndex;
+&nbsp;    private boolean alive;
+&nbsp;    private boolean predictAlter;
+&nbsp;    private boolean predictFlag;//indicating if a prediction is done after last generation
+&nbsp;    private String camp;
+&nbsp;
+&nbsp;    private String predictCamp;
+&nbsp;    private final Cell[] neighbors;
+&nbsp;    private final int neighborSize;
+&nbsp;
+<b class="fc">&nbsp;    public Cell(int rowIndex, int columnIndex,int neighborSize){</b>
+<b class="fc">&nbsp;        this.rowIndex = rowIndex;</b>
+<b class="fc">&nbsp;        this.columnIndex = columnIndex;</b>
+<b class="fc">&nbsp;        this.alive = false;</b>
+<b class="fc">&nbsp;        this.predictAlter = false;</b>
+<b class="fc">&nbsp;        this.camp = &quot; &quot;;</b>
+<b class="fc">&nbsp;        this.neighborSize = neighborSize;</b>
+<b class="fc">&nbsp;        this.neighbors = new Cell[neighborSize];</b>
+<b class="fc">&nbsp;        this.predictCamp = this.camp;</b>
+&nbsp;    }
+&nbsp;    public ArrayList findNeighbors(int rowSize, int columnSize){
+&nbsp;        //should be overridden
+<b class="nc">&nbsp;        return null;</b>
+&nbsp;    }
+&nbsp;    public void assignNeighbors(ArrayList neighbors){
+<b class="fc">&nbsp;        for(int i = 0; i &lt; this.neighborSize; i++){</b>
+<b class="fc">&nbsp;            this.neighbors[i] = (Cell) neighbors.get(i);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    public void bornInCamp(String camp){
+&nbsp;        //The player can set a cell alive
+&nbsp;        //ONLY when the cell is dead
+<b class="pc">&nbsp;        assert !this.isAlive();</b>
+<b class="fc">&nbsp;        this.alive = true;</b>
+<b class="fc">&nbsp;        this.camp = camp;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void takeMurder() {
+<b class="pc">&nbsp;        assert this.isAlive();</b>
+<b class="fc">&nbsp;        this.alive = false;</b>
+<b class="fc">&nbsp;        this.camp = &quot; &quot;;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void predict(){
+&nbsp;        //predict the state of next generation
+&nbsp;        //BUT WITHOUT updating the REAL state, because it will influence other cells
+<b class="pc">&nbsp;        assert !this.predictFlag;</b>
+<b class="fc">&nbsp;        this.predictAlter = false;//default stay</b>
+<b class="fc">&nbsp;        this.predictCamp = this.camp;</b>
+<b class="fc">&nbsp;        int num = numAliveNeighbors();</b>
+<b class="fc">&nbsp;        if(!this.alive &amp;&amp; num == 3) {</b>
+<b class="fc">&nbsp;                this.predictAlter = true;</b>
+<b class="fc">&nbsp;                this.predictCamp = dominantNeighborCamp();</b>
+&nbsp;            }//reborn
+<b class="pc">&nbsp;        else if(this.alive &amp;&amp; (num&lt;2 | num&gt;3)){</b>
+<b class="fc">&nbsp;                this.predictAlter = true;</b>
+<b class="fc">&nbsp;                this.predictCamp = &quot; &quot;;</b>
+&nbsp;            }//die
+<b class="fc">&nbsp;        this.predictFlag = true;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void generate(){
+&nbsp;        //update the prediction to REAL state
+&nbsp;        //should only be updated after all cells predicted
+<b class="pc">&nbsp;        assert this.predictFlag;</b>
+<b class="fc">&nbsp;        if(this.predictAlter) {</b>
+<b class="fc">&nbsp;            if (this.alive) {die();} else {born();}//alter state</b>
+&nbsp;        }
+<b class="fc">&nbsp;        this.camp = this.predictCamp;</b>
+<b class="fc">&nbsp;        this.predictFlag = false;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public boolean isAlive() {
+<b class="fc">&nbsp;        return alive;</b>
+&nbsp;    }
+&nbsp;    public String getCamp() {
+<b class="fc">&nbsp;        return camp;</b>
+&nbsp;    }
+&nbsp;    public int getRowIndex() {
+<b class="fc">&nbsp;        return rowIndex;</b>
+&nbsp;    }
+&nbsp;    public int getColumnIndex() {
+<b class="fc">&nbsp;        return columnIndex;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void born(){
+&nbsp;        //check colors around
+<b class="fc">&nbsp;        this.alive = true;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void die(){
+<b class="fc">&nbsp;        this.alive = false;</b>
+&nbsp;    }
+&nbsp;    private String dominantNeighborCamp(){
+<b class="pc">&nbsp;        assert numAliveNeighbors() == 3;</b>
+&nbsp;        //record the camps
+<b class="fc">&nbsp;        ArrayList&lt;Cell&gt; aliveNeighbors = aliveNeighbors();</b>
+<b class="fc">&nbsp;        String[] camp = new String[3];</b>
+<b class="fc">&nbsp;        for(int i = 0; i &lt; 3; i++){</b>
+<b class="fc">&nbsp;            camp[i] = aliveNeighbors.get(i).getCamp();</b>
+&nbsp;            }
+&nbsp;        //compare
+<b class="pc">&nbsp;        if(camp[0].equals(camp[1])){</b>
+<b class="fc">&nbsp;            return camp[0];</b>
+<b class="nc">&nbsp;        }else{return camp[2];}</b>
+&nbsp;    }
+&nbsp;    public int numAliveNeighbors(){
+&nbsp;        //return the number of alive neighbors
+&nbsp;        //can be used for test
+<b class="fc">&nbsp;        int num = 0;</b>
+<b class="fc">&nbsp;        for(Cell cell:this.neighbors){</b>
+<b class="fc">&nbsp;            if(cell.isAlive()){</b>
+<b class="fc">&nbsp;                num += 1;</b>
+&nbsp;            }
+&nbsp;        }
+<b class="fc">&nbsp;        return num;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private ArrayList&lt;Cell&gt; aliveNeighbors(){
+<b class="fc">&nbsp;        ArrayList&lt;Cell&gt; aliveNeighbors = new ArrayList&lt;&gt;();</b>
+<b class="fc">&nbsp;        for(Cell cell:this.neighbors){</b>
+<b class="fc">&nbsp;            if(cell.isAlive()) {</b>
+<b class="fc">&nbsp;                aliveNeighbors.add(cell);</b>
+&nbsp;            }
+&nbsp;        }
+<b class="fc">&nbsp;        return aliveNeighbors;</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-12-22 15:25</div>
+</div>
+</body>
+</html>
