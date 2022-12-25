@@ -116,6 +116,7 @@ public class TerminalUI{
         }
     }
 
+
     public static void printBoard(Grid grid){
         int width = grid.getColumnSize();
         TerminalUI.printMultipleTimes("-",width*2+1);

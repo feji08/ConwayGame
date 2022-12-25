@@ -11,5 +11,6 @@ public interface IGrid {
     void killCell(int rowIndex, int columnIndex);//kill a cell
     void activateCell(String camp, int rowIndex, int columnIndex);//player activate
     void generate();//new generation
+    int getCellNum(String camp);//return the number of cell of this camp
     boolean isExtinct(String camp);//check if one side die out
 }

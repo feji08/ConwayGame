@@ -41,6 +41,10 @@ public class Player implements IPlayer{
         }
     }
 
+    public int getCellNum() {
+        return this.grid.getCellNum(this.camp);
+    }
+
     public boolean isExtinct() {
         return this.grid.isExtinct(this.camp);
     }

@@ -76,6 +76,18 @@ public class Grid implements IGrid{
         }
     }
 
+    public int getCellNum(String camp){
+        int cellNum = 0;
+        for(Cell[] cells: this.cells) {
+            for (Cell cell : cells) {
+                if (cell.getCamp().equals(camp) && cell.isAlive()) {
+                    cellNum += 1;
+                }
+            }
+        }
+        return cellNum;
+    }
+
     public boolean isExtinct(String camp){
         for(Cell[] cells: this.cells) {
             for (Cell cell : cells) {
