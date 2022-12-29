@@ -14,31 +14,11 @@ public class Player implements IPlayer{
     }
 
     public void killCell() {
-        int[] crd = TerminalUI.chooseKillCell(this.grid.getRowSize(),this.grid.getColumnSize());
-        int r = crd[0];
-        int c = crd[1];
-        //alive validation
-        if(!grid.isAlive(r,c)){
-            System.out.println("Invalid input! HINT: this cell is not alive. ");
-            this.killCell();
-        }else{
-            if(grid.getCamp(r,c).equals(this.camp)){//alive and belong to the player's self
-                System.out.println("Invalid input! HINT: this cell is yours"+"("+this.camp+").");
-                this.killCell();
-            }else{this.grid.killCell(r,c);}
-        }
+        TerminalUI.chooseKillCell(this.grid,this.getCamp());
     }
 
     public void activateCell() {
-        int[] crd = TerminalUI.chooseActivateCell(this.grid.getRowSize(),this.grid.getColumnSize());
-        int r = crd[0];
-        int c = crd[1];
-        if(grid.isAlive(r,c)){
-            System.out.println("Invalid input! HINT: this cell is already alive. ");
-            this.activateCell();
-        }else{
-            this.grid.activateCell(this.camp,r,c);
-        }
+        TerminalUI.chooseActivateCell(this.grid,this.getCamp());
     }
 
     public int getCellNum() {

@@ -68,54 +68,72 @@ public class TerminalUI{
         }
     }
 
-    public static int[] chooseKillCell(int rowSize, int columnSize) {
+    public static void chooseKillCell(Grid grid, String camp) {
+        int rowSize = grid.getRowSize();
+        int columnSize = grid.getColumnSize();
         System.out.println("Please choose an enemy cell to kill (for example: 10,10): ");
         String pattern = "[0-9]+,[0-9]+";
         Scanner scanner = new Scanner(System.in);
         String input = scanner.next();
         if(!Pattern.matches(pattern,input)){
             System.out.println("Invalid input! HINT: row index comma column index. ");
-            return TerminalUI.chooseKillCell(rowSize, columnSize);
+            TerminalUI.chooseKillCell(grid, camp);
         }else{
             String[] sizeString = input.split(",",2);
             int r = Integer.parseInt(sizeString[0]);
             int c = Integer.parseInt(sizeString[1]);
             if(r >= rowSize | c >= columnSize){
                 System.out.println("Invalid input! HINT: out of index. ");
-                return TerminalUI.chooseKillCell(rowSize, columnSize);
+                TerminalUI.chooseKillCell(grid, camp);
             }else{
-                int[] crd = new int[2];
-                crd[0] = r;
-                crd[1] = c;
-                return crd;
+                //alive validation
+                if(!grid.isAlive(r,c)){
+                    System.out.println("Invalid input! HINT: this cell is not alive. ");
+                    TerminalUI.chooseKillCell(grid, camp);
+                }else{
+                    if(grid.getCamp(r,c).equals(camp)){//alive and belong to the player's self
+                        System.out.println("Invalid input! HINT: this cell is yours"+"("+camp+").");
+                        TerminalUI.chooseKillCell(grid, camp);
+                    }else{grid.killCell(r,c);}
+                }
             }
         }
     }
 
-    public static int[] chooseActivateCell(int rowSize, int columnSize) {
+    public static void chooseActivateCell(Grid grid, String camp) {
+        int rowSize = grid.getRowSize();
+        int columnSize = grid.getColumnSize();
         System.out.println("Please choose a dead cell to activate (for example: 10,10): ");
         String pattern = "[0-9]+,[0-9]+";
         Scanner scanner = new Scanner(System.in);
         String input = scanner.next();
         if(!Pattern.matches(pattern,input)){
             System.out.println("Invalid input! HINT: row index comma column index. ");
-            return TerminalUI.chooseActivateCell(rowSize, columnSize);
+            TerminalUI.chooseActivateCell(grid, camp);
         }else{
             String[] sizeString = input.split(",",2);
             int r = Integer.parseInt(sizeString[0]);
             int c = Integer.parseInt(sizeString[1]);
             if(r >= rowSize | c >= columnSize){
                 System.out.println("Invalid input! HINT: out of index. ");
-                return TerminalUI.chooseActivateCell(rowSize, columnSize);
+                TerminalUI.chooseActivateCell(grid, camp);
             }else{
-                int[] crd = new int[2];
-                crd[0] = r;
-                crd[1] = c;
-                return crd;
+                if(grid.isAlive(r,c)){
+                    System.out.println("Invalid input! HINT: this cell is already alive. ");
+                    TerminalUI.chooseActivateCell(grid, camp);
+                }else{
+                    grid.activateCell(camp,r,c);
+                }
             }
         }
     }
 
+    public static void nextGeneration(Grid grid){
+        System.out.println("Enter anything to confirm generation: ");
+        Scanner scanner = new Scanner(System.in);
+        String input = scanner.next();
+        grid.generate();
+    }
 
     public static void printBoard(Grid grid){
         int width = grid.getColumnSize();

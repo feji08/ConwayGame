@@ -45,7 +45,7 @@ public class Game {
             System.out.print(currentPlayer.getName()+"("+currentPlayer.getCamp()+"), ");
             currentPlayer.activateCell();
             TerminalUI.printBoard(this.grid);
-            this.grid.generate();
+            TerminalUI.nextGeneration(this.grid);
             this.generation++;
             for (Player player : this.players) {
                 if (this.nextTurn && player.isExtinct()) {
