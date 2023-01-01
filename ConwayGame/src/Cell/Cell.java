@@ -1,7 +1,6 @@
 package Cell;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public abstract class Cell implements ICell {
 
@@ -18,7 +17,7 @@ public abstract class Cell implements ICell {
     private String camp;
 
     private String predictCamp;
-    private Cell[] neighbors;
+    private final Cell[] neighbors;
     private final int neighborSize;
 
     public Cell(int rowIndex, int columnIndex,int neighborSize){
@@ -114,9 +113,9 @@ public abstract class Cell implements ICell {
             camp[i] = aliveNeighbors.get(i).getCamp();
             }
         //compare
-        if(camp[0]==camp[1]){
+        if(camp[0].equals(camp[1])){
             return camp[0];
-        }else{return camp[3];}
+        }else{return camp[2];}
     }
     public int numAliveNeighbors(){
         //return the number of alive neighbors

@@ -3,8 +3,8 @@ import Player.Player;
 import UI.TerminalUI;
 
 public class Game {
-    private Grid grid;
-    private Player[] players;
+    private final Grid grid;
+    private final Player[] players;
     private int generation;
     private boolean nextTurn;
     public Game(){
@@ -45,17 +45,19 @@ public class Game {
             System.out.print(currentPlayer.getName()+"("+currentPlayer.getCamp()+"), ");
             currentPlayer.activateCell();
             TerminalUI.printBoard(this.grid);
-            this.grid.generate();
+            TerminalUI.nextGeneration(this.grid);
             this.generation++;
+            System.out.println("Current generation: "+this.generation);
+            for (Player player : this.players){
+                System.out.println(player.getName()+" have "+player.getCellNum()+" alive cells.");
+            }
             for (Player player : this.players) {
-                if (this.nextTurn && grid.isExtinct(player.getCamp())) {
+                if (this.nextTurn && player.isExtinct()) {
                     TerminalUI.printBoard(this.grid);
                     System.out.println("Game over: " + player.getName() + " loses!");
-
                     this.nextTurn = false;
                 }
             }
         }
-
     }
 }

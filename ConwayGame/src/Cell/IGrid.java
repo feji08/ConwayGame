@@ -2,7 +2,7 @@ package Cell;
 
 public interface IGrid {
     /**
-     * can only be killed when it is alive
+     * can only be killed when it is alive & belongs to the other side
      * can only be activated when it is dead
      */
     boolean isAlive(int rowIndex, int columnIndex);//check if a cell is alive
@@ -11,5 +11,6 @@ public interface IGrid {
     void killCell(int rowIndex, int columnIndex);//kill a cell
     void activateCell(String camp, int rowIndex, int columnIndex);//player activate
     void generate();//new generation
+    int getCellNum(String camp);//return the number of cell of this camp
     boolean isExtinct(String camp);//check if one side die out
 }

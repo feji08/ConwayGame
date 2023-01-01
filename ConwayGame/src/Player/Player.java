@@ -3,8 +3,8 @@ import Cell.Grid;
 import UI.TerminalUI;
 
 public class Player implements IPlayer{
-    private Grid grid;
-    private String name;
+    private final Grid grid;
+    private final String name;
     private String camp;
 
     public Player(Grid grid,String name,String camp){
@@ -14,38 +14,19 @@ public class Player implements IPlayer{
     }
 
     public void killCell() {
-        int[] crd = TerminalUI.chooseKillCell(this.grid.getRowSize(),this.grid.getColumnSize());
-        int r = crd[0];
-        int c = crd[1];
-        //alive validation
-        if(!grid.isAlive(r,c)){
-            System.out.println("Invalid input! HINT: this cell is not alive. ");
-            TerminalUI.chooseKillCell(this.grid.getRowSize(),this.grid.getColumnSize());
-        }else{
-            while(grid.getCamp(r,c) == this.camp){//alive
-                System.out.println("Invalid input! HINT: this cell is yours. ");
-                TerminalUI.chooseKillCell(this.grid.getRowSize(),this.grid.getColumnSize());
-            }
-        }
-
-        this.grid.killCell(r,c);
+        TerminalUI.chooseKillCell(this.grid,this.getCamp());
     }
 
     public void activateCell() {
-        int[] crd = TerminalUI.chooseActivateCell(this.grid.getRowSize(),this.grid.getColumnSize());
-        int r = crd[0];
-        int c = crd[1];
-        while(grid.isAlive(r,c)){
-            System.out.println("Invalid input! HINT: this cell is already alive. ");
-            TerminalUI.chooseActivateCell(this.grid.getRowSize(),this.grid.getColumnSize());
-        }
-        this.grid.activateCell(this.camp,r,c);
+        TerminalUI.chooseActivateCell(this.grid,this.getCamp());
+    }
+
+    public int getCellNum() {
+        return this.grid.getCellNum(this.camp);
     }
 
     public boolean isExtinct() {
-        if(this.grid.isExtinct(this.camp)){
-            return true;
-        }else{return false;}
+        return this.grid.isExtinct(this.camp);
     }
     public String getName() {
         return name;
