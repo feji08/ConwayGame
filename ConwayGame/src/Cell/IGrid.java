@@ -2,7 +2,7 @@ package Cell;
 
 public interface IGrid {
     /**
-     * can only be killed when it is alive
+     * can only be killed when it is alive & belongs to the other side
      * can only be activated when it is dead
      */
     boolean isAlive(int rowIndex, int columnIndex);//check if a cell is alive

@@ -72,6 +72,10 @@ public class TerminalUI{
         int rowSize = grid.getRowSize();
         int columnSize = grid.getColumnSize();
         System.out.println("Please choose an enemy cell to kill (for example: 10,10): ");
+        //guiClass.chooseKillCell()
+        //1.tell the player what to do (message)
+        //2.x=12,y=7// 10*10 //r=1, c=0 (r=x%10,c=y%10取商)//
+        //3.return r,c
         String pattern = "[0-9]+,[0-9]+";
         Scanner scanner = new Scanner(System.in);
         String input = scanner.next();

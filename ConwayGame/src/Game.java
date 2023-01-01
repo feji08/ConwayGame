@@ -47,6 +47,10 @@ public class Game {
             TerminalUI.printBoard(this.grid);
             TerminalUI.nextGeneration(this.grid);
             this.generation++;
+            System.out.println("Current generation: "+this.generation);
+            for (Player player : this.players){
+                System.out.println(player.getName()+" have "+player.getCellNum()+" alive cells.");
+            }
             for (Player player : this.players) {
                 if (this.nextTurn && player.isExtinct()) {
                     TerminalUI.printBoard(this.grid);
